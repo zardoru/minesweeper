@@ -1,0 +1,18 @@
+<div class="modal" [ngClass]="{ 'visible': visible }" (click)="close($event)">
+  <div class="contents" (click)="$event.stopPropagation()">
+    <div class="row">
+      <label style="flex-grow: 1">Difficulty</label>
+      <select (change)="changedDifficulty($event)">
+        <option value="0"> Beginner 8x8</option>
+        <option value="1"> Beginner 9x9</option>
+        <option value="2"> Intermediate 16x16</option>
+        <option value="3"> Advanced 30x16</option>
+        <option value="4"> Extra 30x24</option>
+      </select>
+    </div>
+
+    <div class="row">
+      <button (click)="visible = false">Close</button>
+    </div>
+  </div>
+</div>
