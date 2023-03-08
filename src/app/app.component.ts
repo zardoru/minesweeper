@@ -1,4 +1,4 @@
-import { Component, ViewChild, AfterViewInit, AfterContentInit } from '@angular/core';
+import {Component, ViewChild, AfterContentInit, HostListener} from '@angular/core';
 import { BoardComponent } from './board/board.component';
 import {OptionsModalComponent} from "./options-modal/options-modal.component";
 
@@ -17,6 +17,13 @@ export class AppComponent implements AfterContentInit {
   public modal!: OptionsModalComponent;
 
   ngAfterContentInit(): void { /* noop */ }
+
+  @HostListener('document:keydown', ['$event'])
+  handleKey(ev: KeyboardEvent) {
+    if (ev.key == "F2") {
+      this.board.reset();
+    }
+  }
 
   flags(): number {
     if (this.board)

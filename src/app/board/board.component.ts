@@ -1,4 +1,4 @@
-import {Component, ElementRef} from '@angular/core';
+import {Component} from '@angular/core';
 import {Cell, CellState} from '../cell';
 import { Grid } from '../grid';
 
@@ -22,11 +22,12 @@ export class BoardComponent {
   public failed = false;
 
   public flags = 0;
+  public reveals = 0;
 
   public timer = 0;
   public timerHandle: number | null = null;
 
-  constructor(element: ElementRef) {
+  constructor() {
     this.grid = new Grid(this.rowCnt, this.colCnt);
     this.reset();
   }
@@ -41,6 +42,7 @@ export class BoardComponent {
 
     this.timer = 0;
     this.flags = 0;
+    this.reveals = 0;
 
     if (this.timerHandle != null)
       clearInterval(this.timerHandle);
@@ -94,9 +96,14 @@ export class BoardComponent {
   cellClick(cell: Cell) {
     if (this.failed) return;
 
+    if (this.reveals == 0) {
+      this.grid.reset(this.mineCount, cell.row, cell.col);
+    }
+
     if (cell.isRevealed())
       return;
 
+    this.reveals++;
     if (cell.activate()) {
       this.endGame(true);
     } else {
@@ -118,17 +125,12 @@ export class BoardComponent {
 
     if (this.failed) return;
 
-    if (cell.isRevealed()) {
-      let status = this.grid.chord(cell.row, cell.col);
-      this.flags += status.addedFlags;
-      if (status.failed) {
-        this.endGame(true);
-      } else {
-        this.checkVictory();
-      }
-    } else {
-      this.flags += cell.flag();
-    }
+    let status = this.grid.activateFlag(cell);
+    this.flags += status.addedFlags;
+    if (status.failed)
+      this.endGame(true);
+    else
+      this.checkVictory();
   }
 
   cellContentStyle(content: number) {

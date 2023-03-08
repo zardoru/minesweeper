@@ -19,7 +19,7 @@ export class Grid {
     this.reset(mineCount);
   }
 
-  reset(mineCount: number) {
+  reset(mineCount: number, row: number | null = null, col: number | null = null) {
     for (let row = 0; row < this.rowCnt; row++) {
       for (let col = 0; col < this.colCnt; col++) {
         this.grid[row][col].reset();
@@ -30,18 +30,21 @@ export class Grid {
       mineCount = Math.max( 10, Math.floor(Math.random() * (this.rowCnt - 1) * (this.colCnt - 1)) );
     }
 
-
     this.mineCount = mineCount;
 
     for (let i = 0; i < mineCount; i++) {
 
       /* it is possible to loop forever if minecount >= rowCnt * colCnt */
       while (true) {
-        let row = Math.floor(Math.random() * this.rowCnt);
-        let col = Math.floor(Math.random() * this.colCnt);
+        let attemptRow = Math.floor(Math.random() * this.rowCnt);
+        let attemptCol = Math.floor(Math.random() * this.colCnt);
 
-        if (!this.grid[row][col].isBomb()) {
-          this.grid[row][col].makeBomb();
+        let prohibitedRow = row != null ? row == attemptRow : false;
+        let prohibitedCol = col != null ? col == attemptCol : false;
+        let prohibit = prohibitedCol && prohibitedRow;
+
+        if (!this.grid[attemptRow][attemptCol].isBomb() && !prohibit) {
+          this.grid[attemptRow][attemptCol].makeBomb();
           break;
         }
       }
@@ -177,6 +180,14 @@ export class Grid {
         this.revealEmpty(c.row, c.col);
       }
     })
+  }
+
+  activateFlag(cell: Cell): { addedFlags: number, failed: boolean } {
+    if (cell.isRevealed()) {
+      return this.chord(cell.row, cell.col);
+    } else {
+       return { addedFlags: cell.flag(), failed: false }
+    }
   }
 
   cells(): Cell[] {
