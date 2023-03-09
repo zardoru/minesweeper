@@ -20,4 +20,10 @@ describe('BoardComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should have the expected dimensions', () => {
+    expect(component.rowCnt).toBe(10);
+    expect(component.colCnt).toBe(10);
+    expect(component.mineCount).toBe(15);
+  });
 });

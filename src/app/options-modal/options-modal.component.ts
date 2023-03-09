@@ -1,14 +1,6 @@
 import { Component, Input } from '@angular/core';
 import {BoardComponent} from "../board/board.component";
 
-interface BoardConfig {
-  rowCnt: number,
-  colCnt: number,
-  mineCount: number;
-}
-
-
-
 @Component({
   selector: 'app-options-modal',
   templateUrl: './options-modal.component.html',
@@ -42,16 +34,21 @@ export class OptionsModalComponent {
         board.mineCount = 10;
         break;
       case 2:
+        board.rowCnt = 10;
+        board.colCnt = 10;
+        board.mineCount = 15;
+        break;
+      case 3:
         board.rowCnt = 16;
         board.colCnt = 16;
         board.mineCount = 40;
         break;
-      case 3:
+      case 4:
         board.rowCnt = 16;
         board.colCnt = 30;
         board.mineCount = 99;
         break;
-      case 4:
+      case 5:
         board.rowCnt = 24;
         board.colCnt = 30;
         board.mineCount = -1; // autogenerate, see grid.ts

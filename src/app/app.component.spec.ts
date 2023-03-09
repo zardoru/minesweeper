@@ -1,11 +1,15 @@
 import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import {BoardComponent} from "./board/board.component";
+import {OptionsModalComponent} from "./options-modal/options-modal.component";
 
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [
-        AppComponent
+        AppComponent,
+        BoardComponent,
+        OptionsModalComponent
       ],
     }).compileComponents();
   });
@@ -16,16 +20,11 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'buscaminas'`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('buscaminas');
-  });
-
-  it('should render title', () => {
+  it('should have created the sub-components successfully', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain('buscaminas app is running!');
+    expect(compiled.querySelector('app-board')).withContext('board').toBeTruthy();
+    expect(compiled.querySelector('app-options-modal')).withContext('options modal').toBeTruthy();
   });
 });

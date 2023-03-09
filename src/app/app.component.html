@@ -1,10 +1,10 @@
 <div class="header">
-  <button (click)="board.reset()">Reset</button>
-  <button (click)="modal.show()" style="background-color: #ac8d11">Options</button>
+  <button (click)="resetBoard()">Reset</button>
+  <button (click)="showOptions()" style="background-color: #ac8d11">Options</button>
   <div class="timer"> {{ mins() | number: '2.0-0' }}:{{ secs() | number: '2.0-0' }} </div>
   <div class="flags"> {{ flags() }} / {{ mines() }} </div>
 </div>
 <div class="game">
-  <app-board></app-board>
+  <app-board #board></app-board>
 </div>
 <app-options-modal [board]="board"></app-options-modal>

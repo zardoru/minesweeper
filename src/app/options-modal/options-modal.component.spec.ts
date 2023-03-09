@@ -20,4 +20,16 @@ describe('OptionsModalComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should becoome visible on show', () => {
+    component.close(new MouseEvent(''));
+    component.show();
+    expect(component.visible).toBeTrue();
+  });
+
+  it('should close', () => {
+    component.show();
+    component.close(new MouseEvent(''));
+    expect(component.visible).toBeFalse();
+  });
 });

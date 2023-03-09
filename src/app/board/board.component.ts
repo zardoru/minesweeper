@@ -12,12 +12,10 @@ export class BoardComponent {
 
   public boardStyle = {};
 
-  public rowCnt = 15;
-  public colCnt = 15;
+  public rowCnt = 10;
+  public colCnt = 10;
 
-  public cellSize = 25;
-
-  public mineCount = 40;
+  public mineCount = 15;
 
   public failed = false;
 
@@ -54,7 +52,7 @@ export class BoardComponent {
       this.grid = new Grid(this.rowCnt, this.colCnt);
     }
 
-    this.grid.reset(this.mineCount);
+    this.grid.generateBoard(this.mineCount);
     this.failed = false;
   }
 
@@ -97,7 +95,7 @@ export class BoardComponent {
     if (this.failed) return;
 
     if (this.reveals == 0) {
-      this.grid.reset(this.mineCount, cell.row, cell.col);
+      this.grid.generateBoard(this.mineCount, cell.row, cell.col);
     }
 
     if (cell.isRevealed())

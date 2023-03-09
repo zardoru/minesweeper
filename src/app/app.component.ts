@@ -16,7 +16,8 @@ export class AppComponent implements AfterContentInit {
   @ViewChild(OptionsModalComponent)
   public modal!: OptionsModalComponent;
 
-  ngAfterContentInit(): void { /* noop */ }
+  /* if this.board is used directly, angular complains with 'Expression has changed after it was checked'. */
+  ngAfterContentInit(): void {  }
 
   @HostListener('document:keydown', ['$event'])
   handleKey(ev: KeyboardEvent) {
@@ -36,12 +37,12 @@ export class AppComponent implements AfterContentInit {
     if (this.board)
       return this.board.mineCount;
     else
-      return 0;
+      return 15;
   }
 
   secs(): number {
     if (this.board)
-      return this.board?.timer % 60;
+      return this.board.timer % 60;
     else
       return 0;
   }
@@ -55,5 +56,9 @@ export class AppComponent implements AfterContentInit {
 
   resetBoard() {
     this.board.reset();
+  }
+
+  showOptions() {
+    this.modal.show();
   }
 }

@@ -1,7 +1,7 @@
 import { Cell, CellState } from "./cell";
 
 export class Grid {
-  private grid: Cell[][];
+  private readonly grid: Cell[][];
 
   public colCnt = 16;
   public rowCnt = 16;
@@ -15,11 +15,23 @@ export class Grid {
     this.grid = this.makeGrid(rows, cols);
 
     let randCount = Math.floor(Math.random() * rows * cols / 5.);
-    let mineCount = Math.max(20, randCount);
-    this.reset(mineCount);
+    let mineCount = Math.min(Math.max(20, randCount), (rows - 1) * (cols - 1));
+    this.generateBoard(mineCount);
   }
 
-  reset(mineCount: number, row: number | null = null, col: number | null = null) {
+  getCell(row: number, col: number): Cell {
+    return this.grid[row][col];
+  }
+
+  reset() {
+    for (let row = 0; row < this.rowCnt; row++) {
+      for (let col = 0; col < this.colCnt; col++) {
+        this.grid[row][col].reset();
+      }
+    }
+  }
+
+  generateBoard(mineCount: number, row: number | null = null, col: number | null = null) {
     for (let row = 0; row < this.rowCnt; row++) {
       for (let col = 0; col < this.colCnt; col++) {
         this.grid[row][col].reset();
@@ -32,7 +44,13 @@ export class Grid {
 
     this.mineCount = mineCount;
 
-    for (let i = 0; i < mineCount; i++) {
+    this.placeMinesRandomly(row, col);
+
+    this.calculateCellAdjacencies();
+  }
+
+  private placeMinesRandomly(row: number | null, col: number | null) {
+    for (let i = 0; i < this.mineCount; i++) {
 
       /* it is possible to loop forever if minecount >= rowCnt * colCnt */
       while (true) {
@@ -49,7 +67,9 @@ export class Grid {
         }
       }
     }
+  }
 
+  public calculateCellAdjacencies() {
     for (let row = 0; row < this.rowCnt; row++) {
       for (let col = 0; col < this.colCnt; col++) {
         if (this.grid[row][col].isBomb()) continue;
@@ -62,6 +82,37 @@ export class Grid {
 
   makeGrid(row: number, col: number): Cell[][] {
     return new Array(row).fill(0).map((_, r) => new Array(col).fill(0).map((_, c) => new Cell(r, c)));
+  }
+
+  public printBoard(keepBombsHidden: boolean) {
+    let boardstr = "\n";
+    for (let row = 0; row < this.rowCnt; row++) {
+      let rowstr = ""
+      for (let col = 0; col < this.colCnt; col++) {
+        const c = this.getCell(row, col);
+        switch (c.content) {
+          case -1:
+            if (keepBombsHidden && !c.isRevealed())
+              rowstr += '■';
+            else
+              rowstr += 'B';
+            break;
+          default:
+            if (c.isRevealed())
+            {
+              if (c.content == 0)
+                rowstr += '.';
+              else
+                rowstr += c.content;
+            } else {
+              rowstr += '■';
+            }
+        }
+      }
+      boardstr += rowstr + "\n";
+    }
+
+    console.log(boardstr);
   }
 
   cols(): number {
